@@ -29,8 +29,12 @@ class Settings(BaseSettings):
 
     OPENAI_API_KEY: str = ""
     OPENAI_MODEL: str = "gpt-4o-mini"
-    EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
 
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+
+    EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
+    
     CHROMA_PERSIST_DIR: str = "./chroma_data"
     UPLOAD_DIR: str = "./uploads"
     MAX_UPLOAD_SIZE_MB: int = 25

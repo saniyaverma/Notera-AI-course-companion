@@ -116,19 +116,22 @@ async def _run_pipeline(db: AsyncSession, course_id: str) -> None:
     for t in extracted_topics:
         meta = next((m for m in topics_with_meta if m["title"] == t["title"]), {})
         pr = priority_map.get(t["title"], {})
-        priority_value = pr.get("priority", "medium")
+        priority_value = str(pr.get("priority", "medium")).strip().lower()
+
+        # Accept only valid enum values
         if priority_value not in ("high", "medium", "low"):
             priority_value = "medium"
 
-        db.add(Topic(
-            course_id=course.id,
-            title=t["title"],
-            priority=PriorityLevel(priority_value),
-            pyq_frequency=meta.get("pyq_frequency", 0),
-            is_covered_in_notes=meta.get("is_covered_in_notes", False),
-            reasoning=pr.get("reasoning"),
-            order_index=t.get("order_index", 0),
-        ))
-
+        db.add(
+            Topic(
+                course_id=course.id,
+                title=t["title"],
+                priority=PriorityLevel(priority_value),
+                pyq_frequency=meta.get("pyq_frequency", 0),
+                is_covered_in_notes=meta.get("is_covered_in_notes", False),
+                reasoning=pr.get("reasoning"),
+                order_index=t.get("order_index", 0),
+            )
+        )
     course.status = ProcessingStatus.COMPLETED
     await db.commit()
