@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: "Inter", system-ui, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: #fafafa;
+  color: #18181b;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d8 transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #d4d4d8;
+  border-radius: 9999px;
+}
+
+.prose-notera h1, .prose-notera h2, .prose-notera h3 {
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: #1e1b4b;
+}
+.prose-notera p { margin-bottom: 0.6rem; line-height: 1.65; }
+.prose-notera ul { list-style: disc; padding-left: 1.4rem; margin-bottom: 0.6rem; }
+.prose-notera li { margin-bottom: 0.25rem; }
+.prose-notera strong { color: #312e81; }
+.prose-notera code {
+  background: #f4f4f5;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.25rem;
+  font-size: 0.85em;
+}
