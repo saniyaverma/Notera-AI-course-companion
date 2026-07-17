@@ -12,6 +12,10 @@ Instead of manually reading hundreds of pages of notes, students upload their co
 
 > **Watch Notera in action**
 
+https://github.com/user-attachments/assets/3b00eff8-0389-4090-ac39-c20d98a8e5e3
+
+
+
 
 
 ---
