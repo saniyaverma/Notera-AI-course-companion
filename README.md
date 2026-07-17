@@ -1,70 +1,259 @@
-# Notera — AI Study Companion
+# 🚀 Notera — AI Course Companion
 
-Notera turns a course's syllabus, notes, and past exam papers into a prioritized study plan,
-AI-generated revision notes, an extracted diagram gallery, and a RAG-powered chat tutor.
+> **From notes to knowledge.**
 
-## Architecture
+Notera is an AI-powered Course Companion that transforms scattered academic resources into structured, personalized study material.
 
-- **Backend**: FastAPI (async), PostgreSQL (SQLAlchemy 2.0 async), ChromaDB (local vector store),
-  OpenAI for LLM calls, JWT auth + Google OAuth.
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS, Zustand for auth state.
-- **Agentic pipeline**: on course upload, a background task chain runs:
-  1. Parse syllabus/notes/PYQs (pypdf / python-docx)
-  2. Chunk + embed into ChromaDB (per-course collection)
-  3. Topic extraction agent (LLM) → syllabus topics
-  4. PYQ analysis agent (LLM + RAG) → Q&A pairs, topic frequency
-  5. Priority ranking agent (LLM) → high/medium/low per topic
-  6. Diagram extraction (embedded PDF images)
-  7. On-demand: short-notes agent (RAG) and chat agent (RAG)
+Instead of manually reading hundreds of pages of notes, students upload their course materials, and Notera automatically extracts topics, analyzes previous year questions, prioritizes important concepts, generates revision notes, and provides an AI-powered chat grounded in their own resources.
 
-## Local Setup
+---
 
-### 1. Backend
+# 🎥 Demo
+
+> **Watch Notera in action**
+
+
+
+---
+
+## ✨ Features
+
+- 📚 Upload course notes, syllabus, and previous year question papers
+- 🧠 AI-powered topic extraction
+- 📊 Automatic topic prioritization (High / Medium / Low)
+- 📝 AI-generated revision notes
+- ❓ Important question extraction from PYQs
+- 🖼️ Automatic diagram extraction from PDFs
+- 💬 Retrieval-Augmented Generation (RAG) based AI chat
+- 🔒 Secure authentication (JWT + Google OAuth)
+
+---
+
+# 🏗️ System Architecture
+
+```text
+                 Upload Course Files
+                         │
+                         ▼
+               Text & Image Extraction
+                         │
+                         ▼
+              Chunking + Embedding
+                         │
+                         ▼
+             Chroma Vector Database
+                         │
+        ┌────────────────┼────────────────┐
+        ▼                ▼                ▼
+ Topic Extraction   PYQ Analysis   Diagram Extraction
+        │                │
+        └──────────┬─────┘
+                   ▼
+          Priority Ranking Agent
+                   │
+                   ▼
+          AI Course Dashboard
+                   │
+         ┌─────────┴─────────┐
+         ▼                   ▼
+    Revision Notes      AI Chat (RAG)
+```
+
+---
+
+# 🤖 Agentic AI Pipeline
+
+Every uploaded course automatically triggers an asynchronous AI pipeline.
+
+### Step 1 — Document Parsing
+
+- Extract text from Notes, Syllabus and PYQs
+- Extract embedded diagrams from PDFs
+
+### Step 2 — Semantic Indexing
+
+- Split documents into semantic chunks
+- Generate embeddings
+- Store vectors inside ChromaDB
+
+### Step 3 — Topic Extraction Agent
+
+Uses an LLM to identify all important syllabus topics.
+
+### Step 4 — PYQ Analysis Agent
+
+Analyzes previous year papers to:
+
+- identify recurring questions
+- map questions to topics
+- estimate topic frequency
+
+### Step 5 — Priority Ranking Agent
+
+Ranks every topic as:
+
+- 🔴 High
+- 🟡 Medium
+- 🟢 Low
+
+based on:
+
+- syllabus
+- PYQs
+- notes
+- LLM reasoning
+
+### Step 6 — Revision Notes Agent
+
+Generates concise AI-powered revision notes using Retrieval-Augmented Generation.
+
+### Step 7 — Chat Agent
+
+Allows students to ask questions about their course while grounding every response in uploaded documents.
+
+---
+
+# 🛠️ Tech Stack
+
+## Backend
+
+- FastAPI
+- Python
+- SQLAlchemy 2.0
+- PostgreSQL
+- Alembic
+- ChromaDB
+- Sentence Transformers
+- Gemini / OpenAI
+- JWT Authentication
+- Google OAuth
+
+## Frontend
+
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- Zustand
+
+## AI & ML
+
+- Retrieval-Augmented Generation (RAG)
+- Semantic Search
+- Vector Embeddings
+- Prompt Engineering
+- LLM-based Topic Extraction
+- LLM-based Priority Ranking
+- Background AI Pipelines
+
+---
+
+# 📂 Project Structure
+
+```text
+backend/
+    app/
+        agents/
+        api/
+        models/
+        services/
+        pipeline.py
+
+frontend/
+    src/
+        app/
+        components/
+        lib/
+```
+
+---
+
+# 🚀 Running Locally
+
+## Backend
 
 ```bash
 cd backend
-cp .env.example .env   # fill in SECRET_KEY, OPENAI_API_KEY, Google OAuth creds, SMTP creds
-python -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
 
-# Start Postgres (or use docker-compose up db)
-alembic upgrade head
-
-uvicorn app.main:app --reload --port 8000
+python -m venv venv
 ```
 
-### 2. Frontend
+Windows
+
+```bash
+venv\Scripts\activate
+```
+
+Linux/macOS
+
+```bash
+source venv/bin/activate
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Run migrations
+
+```bash
+alembic upgrade head
+```
+
+Start backend
+
+```bash
+uvicorn app.main:app --reload
+```
+
+---
+
+## Frontend
 
 ```bash
 cd frontend
-cp .env.local.example .env.local
+
 npm install
+
 npm run dev
 ```
 
-Visit `http://localhost:3000`.
+Open
 
-### 3. Or run everything with Docker Compose
+```
+http://localhost:3000
+```
+
+---
+
+# 🐳 Docker
 
 ```bash
 docker-compose up --build
 ```
 
-## Environment Variables
 
-See `backend/.env.example` and `frontend/.env.local.example`.
+---
 
-Required for full functionality:
-- `OPENAI_API_KEY` — powers all agentic features (topic extraction, PYQ analysis, notes, chat)
-- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — Google sign-in
-- `MAIL_USERNAME` / `MAIL_PASSWORD` — password reset emails (SMTP, e.g. Gmail App Password)
+# 🎯 Why Notera?
 
-Without `OPENAI_API_KEY`, course upload will succeed but processing will fail — auth, course CRUD,
-and file upload still work end-to-end.
+Unlike traditional PDF chatbots, Notera understands the academic workflow.
 
-## Notes on Production Deployment
+It combines:
 
-- Swap `CHROMA_PERSIST_DIR` for a persistent volume, or point to a hosted Chroma/PGVector instance.
-- Put `uploads/` on object storage (S3) for horizontal scaling; update `file_parser`/`static` mount accordingly.
-- Run Alembic migrations as a release step, not on container boot.
-- Set `FRONTEND_URL`, `GOOGLE_REDIRECT_URI`, and CORS origins to your deployed domains.
+- document intelligence
+- semantic retrieval
+- AI reasoning
+- previous year paper analysis
+- personalized study planning
+
+to help students study more efficiently.
+
+---
+
+# 👩‍💻 Author
+
+**Saniya Verma**
+
+Built as an end-to-end AI Engineering project exploring Retrieval-Augmented Generation (RAG), Agentic AI pipelines, and intelligent educational systems.
