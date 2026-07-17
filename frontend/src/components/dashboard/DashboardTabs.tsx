@@ -8,46 +8,55 @@ export interface TabDef {
   count?: number;
 }
 
+interface DashboardTabsProps {
+  tabs: TabDef[];
+  active: string;
+  onChange: (key: string) => void;
+}
+
 export default function DashboardTabs({
   tabs,
   active,
   onChange,
-}: {
-  tabs: TabDef[];
-  active: string;
-  onChange: (key: string) => void;
-}) {
+}: DashboardTabsProps) {
   return (
-    <div className="flex gap-1 overflow-x-auto border-b border-zinc-200 pb-px">
-      {tabs.map((tab) => {
-        const isActive = active === tab.key;
-        const Icon = tab.icon;
-        return (
-          <button
-            key={tab.key}
-            onClick={() => onChange(tab.key)}
-            className={clsx(
-              "flex shrink-0 items-center gap-1.5 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
-              isActive
-                ? "border-brand-500 text-brand-600"
-                : "border-transparent text-zinc-500 hover:text-zinc-800"
-            )}
-          >
-            <Icon size={15} />
-            {tab.label}
-            {typeof tab.count === "number" && (
-              <span
-                className={clsx(
-                  "ml-0.5 rounded-full px-1.5 py-0.5 text-[11px]",
-                  isActive ? "bg-brand-100 text-brand-700" : "bg-zinc-100 text-zinc-500"
-                )}
-              >
-                {tab.count}
-              </span>
-            )}
-          </button>
-        );
-      })}
+    <div className="overflow-x-auto no-scrollbar">
+      <div className="inline-flex min-w-full gap-2 rounded-xl border border-zinc-200 bg-white p-2 shadow-sm">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = active === tab.key;
+
+          return (
+            <button
+              key={tab.key}
+              onClick={() => onChange(tab.key)}
+              className={clsx(
+                "flex shrink-0 items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200",
+                isActive
+                  ? "bg-brand-600 text-white shadow-sm"
+                  : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+              )}
+            >
+              <Icon size={16} />
+
+              <span>{tab.label}</span>
+
+              {typeof tab.count === "number" && (
+                <span
+                  className={clsx(
+                    "rounded-full px-2 py-0.5 text-[11px] font-semibold",
+                    isActive
+                      ? "bg-white/20 text-white"
+                      : "bg-zinc-200 text-zinc-700"
+                  )}
+                >
+                  {tab.count}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

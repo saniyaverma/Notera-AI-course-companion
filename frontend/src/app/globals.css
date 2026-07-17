@@ -46,3 +46,15 @@ body {
   border-radius: 0.25rem;
   font-size: 0.85em;
 }
+
+/* Hide scrollbar while keeping scrolling enabled */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* Internet Explorer & Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}

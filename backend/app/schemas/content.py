@@ -4,6 +4,10 @@ from pydantic import BaseModel
 from app.models.content import PriorityLevel, ChatRole
 
 
+# ===========================
+# Topics
+# ===========================
+
 class TopicOut(BaseModel):
     id: uuid.UUID
     title: str
@@ -13,9 +17,16 @@ class TopicOut(BaseModel):
     reasoning: str | None
     order_index: int
 
+    # NEW
+    completed: bool
+
     class Config:
         from_attributes = True
 
+
+# ===========================
+# Questions
+# ===========================
 
 class QuestionOut(BaseModel):
     id: uuid.UUID
@@ -27,6 +38,10 @@ class QuestionOut(BaseModel):
     class Config:
         from_attributes = True
 
+
+# ===========================
+# Diagrams
+# ===========================
 
 class DiagramOut(BaseModel):
     id: uuid.UUID
@@ -40,6 +55,10 @@ class DiagramOut(BaseModel):
         from_attributes = True
 
 
+# ===========================
+# Short Notes
+# ===========================
+
 class ShortNoteOut(BaseModel):
     id: uuid.UUID
     topic_title: str
@@ -50,14 +69,29 @@ class ShortNoteOut(BaseModel):
         from_attributes = True
 
 
+# ===========================
+# Dashboard
+# ===========================
+
 class DashboardOut(BaseModel):
     topics: list[TopicOut]
     questions: list[QuestionOut]
     diagrams: list[DiagramOut]
     short_notes: list[ShortNoteOut]
+
+    # Existing fields
     coverage_percent: float
     missing_topics: list[str]
 
+    # NEW fields for syllabus checklist
+    total_topics: int
+    completed_topics: int
+    syllabus_progress: float
+
+
+# ===========================
+# Chat
+# ===========================
 
 class ChatMessageIn(BaseModel):
     message: str
@@ -71,3 +105,11 @@ class ChatMessageOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ===========================
+# Toggle Topic Completion
+# ===========================
+
+class TopicCompletionUpdate(BaseModel):
+    completed: bool

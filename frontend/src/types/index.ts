@@ -5,7 +5,11 @@ export interface User {
   is_google_account: boolean;
 }
 
-export type ProcessingStatus = "pending" | "processing" | "completed" | "failed";
+export type ProcessingStatus =
+  | "pending"
+  | "processing"
+  | "completed"
+  | "failed";
 
 export interface Course {
   id: string;
@@ -26,6 +30,9 @@ export interface Topic {
   priority: PriorityLevel;
   pyq_frequency: number;
   is_covered_in_notes: boolean;
+
+  completed: boolean;
+
   reasoning: string | null;
   order_index: number;
 }
@@ -59,8 +66,13 @@ export interface DashboardData {
   questions: ImportantQuestion[];
   diagrams: Diagram[];
   short_notes: ShortNote[];
+
   coverage_percent: number;
   missing_topics: string[];
+
+  total_topics: number;
+  completed_topics: number;
+  syllabus_progress: number;
 }
 
 export type ChatRole = "user" | "assistant";

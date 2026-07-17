@@ -48,9 +48,28 @@ class Topic(Base):
     )
 
     pyq_frequency: Mapped[int] = mapped_column(Integer, default=0)
-    is_covered_in_notes: Mapped[bool] = mapped_column(Boolean, default=False)
-    reasoning: Mapped[str | None] = mapped_column(Text, nullable=True)
-    order_index: Mapped[int] = mapped_column(Integer, default=0)
+
+    is_covered_in_notes: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+    )
+
+    reasoning: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    order_index: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
+    )
+
+    # NEW: Track syllabus checklist completion
+    completed: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+    )
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -78,9 +97,18 @@ class ImportantQuestion(Base):
     )
 
     question: Mapped[str] = mapped_column(Text)
+
     answer: Mapped[str] = mapped_column(Text)
-    topic_title: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    frequency: Mapped[int] = mapped_column(Integer, default=1)
+
+    topic_title: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    frequency: Mapped[int] = mapped_column(
+        Integer,
+        default=1,
+    )
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -108,10 +136,23 @@ class Diagram(Base):
     )
 
     title: Mapped[str] = mapped_column(String(500))
-    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    description: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
     image_path: Mapped[str] = mapped_column(String(1000))
-    source_file: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    page_number: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    source_file: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    page_number: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -139,8 +180,13 @@ class ShortNote(Base):
     )
 
     topic_title: Mapped[str] = mapped_column(String(500))
+
     content_markdown: Mapped[str] = mapped_column(Text)
-    order_index: Mapped[int] = mapped_column(Integer, default=0)
+
+    order_index: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
+    )
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -172,7 +218,13 @@ class ChatMessage(Base):
         ForeignKey("courses.id", ondelete="CASCADE"),
     )
 
-    role: Mapped[ChatRole] = mapped_column(Enum(ChatRole, values_callable=lambda enum_cls: [e.value for e in enum_cls],))
+    role: Mapped[ChatRole] = mapped_column(
+        Enum(
+            ChatRole,
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        )
+    )
+
     content: Mapped[str] = mapped_column(Text)
 
     created_at: Mapped[datetime] = mapped_column(
