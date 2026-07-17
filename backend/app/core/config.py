@@ -33,6 +33,12 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-2.5-flash"
 
+    OPENROUTER_API_KEY: str = ""
+    OPENROUTER_MODEL: str = "openrouter/free"
+
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+
     EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
     
     CHROMA_PERSIST_DIR: str = "./chroma_data"

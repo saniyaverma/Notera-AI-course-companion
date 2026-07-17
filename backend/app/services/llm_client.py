@@ -8,10 +8,7 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-GEMINI_URL = (
-    f"https://generativelanguage.googleapis.com/v1beta/models/"
-    f"{settings.GEMINI_MODEL}:generateContent"
-)
+GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
@@ -21,59 +18,51 @@ async def chat_completion(
     json_mode: bool = False,
     temperature: float = 0.3,
 ) -> str:
+    if not settings.GROQ_API_KEY:
+        raise RuntimeError("GROQ_API_KEY is not configured")
 
-    if not settings.GEMINI_API_KEY:
-        raise RuntimeError("GEMINI_API_KEY is not configured")
-
-    prompt = f"""System Instructions:
-
-{system_prompt}
-
-User:
-
-{user_prompt}
-"""
+    messages = [
+        {
+            "role": "system",
+            "content": system_prompt,
+        },
+        {
+            "role": "user",
+            "content": user_prompt,
+        },
+    ]
 
     if json_mode:
-        prompt += """
+        messages[1]["content"] += """
 
 Return ONLY valid JSON.
 Do not use markdown.
-Do not wrap in ```json.
+Do not wrap the response in ```json.
 """
 
     payload = {
-        "contents": [
-            {
-                "parts": [
-                    {
-                        "text": prompt
-                    }
-                ]
-            }
-        ],
-        "generationConfig": {
-            "temperature": temperature
-        }
+        "model": settings.GROQ_MODEL,
+        "messages": messages,
+        "temperature": temperature,
     }
 
     async with httpx.AsyncClient(timeout=120) as client:
         response = await client.post(
-            GEMINI_URL,
+            GROQ_URL,
             headers={
-            "x-goog-api-key": settings.GEMINI_API_KEY,
-            "Content-Type": "application/json",
+                "Authorization": f"Bearer {settings.GROQ_API_KEY}",
+                "Content-Type": "application/json",
             },
             json=payload,
         )
 
     if response.status_code != 200:
-        logger.error("Gemini Error: %s", response.text)
+        logger.error("Groq Error: %s", response.text)
         response.raise_for_status()
 
     data = response.json()
 
-    return data["candidates"][0]["content"]["parts"][0]["text"]
+    return data["choices"][0]["message"]["content"]
 
 
 async def chat_completion_json(
@@ -81,7 +70,6 @@ async def chat_completion_json(
     user_prompt: str,
     temperature: float = 0.3,
 ) -> dict:
-
     raw = await chat_completion(
         system_prompt,
         user_prompt,
@@ -93,8 +81,7 @@ async def chat_completion_json(
         return json.loads(raw)
 
     except json.JSONDecodeError:
-
-        logger.warning("Gemini returned non-clean JSON.")
+        logger.warning("Model returned non-clean JSON.")
 
         cleaned = (
             raw.replace("```json", "")
@@ -102,4 +89,9 @@ async def chat_completion_json(
             .strip()
         )
 
-        return json.loads(cleaned)
+        try:
+            return json.loads(cleaned)
+
+        except json.JSONDecodeError:
+            logger.error("Failed to parse JSON:\n%s", raw)
+            raise

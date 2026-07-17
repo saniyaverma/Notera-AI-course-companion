@@ -28,6 +28,18 @@ const FEATURES = [
     desc: "Ask Notera anything about your course and get grounded, accurate answers instantly.",
     href: "/dashboard",
   },
+  {
+    icon: ListChecks,
+    title: "Prioritize Topics",
+    desc: "See exactly what to study first, based on how often it's been asked, and what's missing from your notes.",
+    href: "/dashboard",
+  },
+  {
+    icon: ImageIcon,
+    title: "Diagrams, All in One Place",
+    desc: "Notera automatically extracts diagrams from your notes so you never lose track of visual material.",
+    href: "/dashboard",
+  },
 ];
 
 export default function HomePage() {
@@ -39,14 +51,14 @@ export default function HomePage() {
     router.push(user ? href : "/login");
   };
 
-  return (
+  return(
     <div className="min-h-screen bg-gradient-to-b from-brand-50/40 via-white to-white">
       <PublicNavbar />
 
       <main className="mx-auto max-w-6xl px-6">
         <section className="flex flex-col items-center py-20 text-center animate-fadeIn">
           <span className="mb-5 inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 px-3.5 py-1 text-xs font-medium text-brand-700">
-            <Sparkles size={13} /> AI-powered exam preparation
+            <Sparkles size={13} /> AI-powered course companion
           </span>
           <h1 className="max-w-3xl text-4xl font-bold leading-tight text-zinc-900 sm:text-6xl">
             Study smarter with <span className="text-brand-500">Notera</span>
@@ -85,7 +97,7 @@ export default function HomePage() {
           ))}
         </section>
 
-        <section className="grid gap-6 pb-24 sm:grid-cols-2">
+        {/* <section className="grid gap-6 pb-24 sm:grid-cols-2">
           <Card className="flex items-start gap-4 p-6">
             <div className="rounded-lg bg-amber-50 p-2.5 text-amber-600">
               <ListChecks size={20} />
@@ -110,11 +122,11 @@ export default function HomePage() {
               </p>
             </div>
           </Card>
-        </section>
+        </section> */}
       </main>
 
       <footer className="border-t border-zinc-100 py-8 text-center text-sm text-zinc-400">
-        © {new Date().getFullYear()} Notera. Built for students, by students.
+        © {new Date().getFullYear()} Notera. Built for students with ❤️.
       </footer>
     </div>
   );
