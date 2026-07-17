@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ChevronDown, HelpCircle } from "lucide-react";
 import clsx from "clsx";
 import Card from "@/components/ui/Card";
-import { EmptyTab } from "@/components/dashboard/TopicPriorityList";
+import EmptyTab from "@/components/dashboard/EmptyTab";
 import type { ImportantQuestion } from "@/types";
 
 export default function ImportantQuestionsList({ questions }: { questions: ImportantQuestion[] }) {
@@ -32,7 +32,7 @@ export default function ImportantQuestionsList({ questions }: { questions: Impor
                     {q.topic_title && (
                       <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-zinc-600">{q.topic_title}</span>
                     )}
-                    <span>Asked {q.frequency}x</span>
+                    {/* <span>Asked {q.frequency}x</span> */}
                   </div>
                 </div>
               </div>

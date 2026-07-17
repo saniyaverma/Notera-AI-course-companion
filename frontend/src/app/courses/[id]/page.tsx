@@ -6,7 +6,6 @@ import Link from "next/link";
 import {
   ArrowLeft,
   ListChecks,
-  BadgeAlert,
   HelpCircle,
   Sparkles,
   ImageIcon,
@@ -20,7 +19,6 @@ import ProcessingState from "@/components/ProcessingState";
 import DashboardTabs, {
   TabDef,
 } from "@/components/dashboard/DashboardTabs";
-import TopicPriorityList from "@/components/dashboard/TopicPriorityList";
 import SyllabusChecklist from "@/components/dashboard/SyllabusChecklist";
 import ImportantQuestionsList from "@/components/dashboard/ImportantQuestionsList";
 import ShortNotesPanel from "@/components/dashboard/ShortNotesPanel";
@@ -37,11 +35,6 @@ const TABS: TabDef[] = [
     key: "syllabus",
     label: "Syllabus",
     icon: ListChecks,
-  },
-  {
-    key: "priority",
-    label: "Priority",
-    icon: BadgeAlert,
   },
   {
     key: "questions",
@@ -277,12 +270,6 @@ export default function CourseDetailPage() {
                     completedTopics={dashboard.completed_topics}
                     syllabusProgress={dashboard.syllabus_progress}
                     onTopicsChange={updateTopics}
-                  />
-                )}
-
-                {activeTab === "priority" && (
-                  <TopicPriorityList
-                    topics={dashboard.topics}
                   />
                 )}
 

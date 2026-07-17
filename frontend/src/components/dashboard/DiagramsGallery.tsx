@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { X, ImageIcon } from "lucide-react";
 import Card from "@/components/ui/Card";
-import { EmptyTab } from "@/components/dashboard/TopicPriorityList";
+import EmptyTab from "@/components/dashboard/EmptyTab";
 import { API_URL } from "@/lib/api";
 import type { Diagram } from "@/types";
 

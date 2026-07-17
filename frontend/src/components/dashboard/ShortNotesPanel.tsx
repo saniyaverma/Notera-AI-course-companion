@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 import { Sparkles } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
-import { EmptyTab } from "@/components/dashboard/TopicPriorityList";
+import EmptyTab from "@/components/dashboard/EmptyTab";
 import type { ShortNote } from "@/types";
 
 export default function ShortNotesPanel({

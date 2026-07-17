@@ -31,6 +31,7 @@ export interface Topic {
   pyq_frequency: number;
   is_covered_in_notes: boolean;
 
+  // NEW
   completed: boolean;
 
   reasoning: string | null;

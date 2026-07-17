@@ -185,12 +185,12 @@ export default function SyllabusChecklist({
                 {topic.title}
               </p>
 
-              <p className="mt-1 text-xs text-zinc-500">
+              {/* <p className="mt-1 text-xs text-zinc-500">
                 Priority:{" "}
                 <span className="capitalize">
                   {topic.priority}
                 </span>
-              </p>
+              </p> */}
             </div>
 
             {savingTopicId === topic.id && (
