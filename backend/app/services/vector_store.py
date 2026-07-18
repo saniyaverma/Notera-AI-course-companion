@@ -3,11 +3,9 @@ from chromadb.utils import embedding_functions
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from app.core.config import settings
 
-_client = chromadb.PersistentClient(path=settings.CHROMA_PERSIST_DIR)
-
-_embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-    model_name=settings.EMBEDDING_MODEL
-)
+# Lazy-loaded globals
+_client = None
+_embedding_fn = None
 
 _splitter = RecursiveCharacterTextSplitter(
     chunk_size=800,
@@ -16,14 +14,30 @@ _splitter = RecursiveCharacterTextSplitter(
 )
 
 
+def _get_client():
+    global _client
+    if _client is None:
+        _client = chromadb.PersistentClient(path=settings.CHROMA_PERSIST_DIR)
+    return _client
+
+
+def _get_embedding_fn():
+    global _embedding_fn
+    if _embedding_fn is None:
+        _embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
+            model_name=settings.EMBEDDING_MODEL
+        )
+    return _embedding_fn
+
+
 def _collection_name(course_id: str) -> str:
     return f"course_{course_id.replace('-', '')}"
 
 
 def get_or_create_collection(course_id: str):
-    return _client.get_or_create_collection(
+    return _get_client().get_or_create_collection(
         name=_collection_name(course_id),
-        embedding_function=_embedding_fn,
+        embedding_function=_get_embedding_fn(),
         metadata={"hnsw:space": "cosine"},
     )
 
@@ -38,14 +52,33 @@ def index_document(course_id: str, text: str, source: str, category: str) -> int
         return 0
 
     ids = [f"{source}-{i}" for i in range(len(chunks))]
-    metadatas = [{"source": source, "category": category, "chunk_index": i} for i in range(len(chunks))]
+    metadatas = [
+        {
+            "source": source,
+            "category": category,
+            "chunk_index": i,
+        }
+        for i in range(len(chunks))
+    ]
 
-    collection.upsert(ids=ids, documents=chunks, metadatas=metadatas)
+    collection.upsert(
+        ids=ids,
+        documents=chunks,
+        metadatas=metadatas,
+    )
+
     return len(chunks)
 
 
-def query_similar_chunks(course_id: str, query: str, n_results: int = 6, category: str | None = None) -> list[dict]:
+def query_similar_chunks(
+    course_id: str,
+    query: str,
+    n_results: int = 6,
+    category: str | None = None,
+) -> list[dict]:
+
     collection = get_or_create_collection(course_id)
+
     where = {"category": category} if category else None
 
     try:
@@ -57,16 +90,17 @@ def query_similar_chunks(course_id: str, query: str, n_results: int = 6, categor
     except Exception:
         return []
 
-    chunks = []
     docs = results.get("documents", [[]])[0]
     metas = results.get("metadatas", [[]])[0]
-    for doc, meta in zip(docs, metas):
-        chunks.append({"text": doc, "metadata": meta})
-    return chunks
+
+    return [
+        {"text": doc, "metadata": meta}
+        for doc, meta in zip(docs, metas)
+    ]
 
 
 def delete_course_collection(course_id: str) -> None:
     try:
-        _client.delete_collection(_collection_name(course_id))
+        _get_client().delete_collection(_collection_name(course_id))
     except Exception:
         pass
