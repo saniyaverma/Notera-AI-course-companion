@@ -4,7 +4,7 @@
 
 Notera is an AI-powered Course Companion that transforms scattered academic resources into structured, personalized study material.
 
-Instead of manually reading hundreds of pages of notes, students upload their course materials, and Notera automatically extracts topics, analyzes previous year questions, prioritizes important concepts, generates revision notes, and provides an AI-powered chat grounded in their own resources.
+Instead of manually reading hundreds of pages of notes, students upload their course materials, and Notera automatically extracts topics, analyzes previous year questions, generates revision notes, and provides an AI-powered chat grounded in their own resources.
 
 ---
 
@@ -12,7 +12,10 @@ Instead of manually reading hundreds of pages of notes, students upload their co
 
 > **Watch Notera in action**
 
-https://github.com/user-attachments/assets/3b00eff8-0389-4090-ac39-c20d98a8e5e3
+
+
+https://github.com/user-attachments/assets/f0aa5008-fcf7-4f1f-bc1d-6d951cbf1015
+
 
 
 
@@ -22,21 +25,21 @@ https://github.com/user-attachments/assets/3b00eff8-0389-4090-ac39-c20d98a8e5e3
 
 ## ✨ Features
 
-- 📚 Upload course notes, syllabus, and previous year question papers
-- 🧠 AI-powered topic extraction
-- 📊 Automatic topic prioritization (High / Medium / Low)
-- 📝 AI-generated revision notes
-- ❓ Important question extraction from PYQs
-- 🖼️ Automatic diagram extraction from PDFs
-- 💬 Retrieval-Augmented Generation (RAG) based AI chat
-- 🔒 Secure authentication (JWT + Google OAuth)
-
+- 📚 Create courses by uploading notes, syllabus, and previous year question papers
+- 📋 AI-generated syllabus checklist with progress tracking
+- 📝 Generate concise AI-powered revision notes for the syllabus topics
+- ❓ Automatic extraction of important questions from previous year papers
+- 🖼️ Extract diagrams and figures from uploaded PDFs
+- 💬 AI-powered course chat grounded in your own study material (RAG)
+- 📖 Persistent chat history for every course
+- 🔒 Secure authentication with Email/Password and Google OAuth
+  
 ---
 
 # 🏗️ System Architecture
 
 ```text
-                 Upload Course Files
+                Upload Course Files
                          │
                          ▼
                Text & Image Extraction
@@ -47,74 +50,60 @@ https://github.com/user-attachments/assets/3b00eff8-0389-4090-ac39-c20d98a8e5e3
                          ▼
              Chroma Vector Database
                          │
-        ┌────────────────┼────────────────┐
-        ▼                ▼                ▼
+        ┌────────────────┼─────────────────┐
+        ▼                ▼                 ▼
  Topic Extraction   PYQ Analysis   Diagram Extraction
         │                │
         └──────────┬─────┘
                    ▼
-          Priority Ranking Agent
+        AI Course Dashboard
                    │
-                   ▼
-          AI Course Dashboard
-                   │
-         ┌─────────┴─────────┐
-         ▼                   ▼
-    Revision Notes      AI Chat (RAG)
+    ┌──────────────┼──────────────┐
+    ▼              ▼              ▼
+Syllabus      Revision Notes   AI Chat (RAG)
+Checklist
 ```
 
 ---
 
-# 🤖 Agentic AI Pipeline
+# 🤖 AI Processing Pipeline
 
-Every uploaded course automatically triggers an asynchronous AI pipeline.
+Every uploaded course automatically triggers an asynchronous AI processing pipeline.
 
 ### Step 1 — Document Parsing
 
-- Extract text from Notes, Syllabus and PYQs
-- Extract embedded diagrams from PDFs
+- Extract text from notes, syllabus, and previous year papers
+- Extract diagrams and figures from PDFs
 
 ### Step 2 — Semantic Indexing
 
-- Split documents into semantic chunks
-- Generate embeddings
-- Store vectors inside ChromaDB
+- Split documents into chunks
+- Generate vector embeddings
+- Store embeddings in ChromaDB
 
-### Step 3 — Topic Extraction Agent
+### Step 3 — Topic Extraction
 
-Uses an LLM to identify all important syllabus topics.
+An LLM identifies the syllabus topics covered across the uploaded material.
 
-### Step 4 — PYQ Analysis Agent
+### Step 4 — PYQ Analysis
 
 Analyzes previous year papers to:
 
 - identify recurring questions
-- map questions to topics
-- estimate topic frequency
+- map questions to syllabus topics
+- estimate topic coverage
 
-### Step 5 — Priority Ranking Agent
+### Step 5 — Syllabus Checklist Generation
 
-Ranks every topic as:
+Builds a structured checklist of syllabus topics that students can track while studying.
 
-- 🔴 High
-- 🟡 Medium
-- 🟢 Low
+### Step 6 — Revision Notes
 
-based on:
+Generates concise revision notes for selected topics using Retrieval-Augmented Generation.
 
-- syllabus
-- PYQs
-- notes
-- LLM reasoning
+### Step 7 — AI Chat
 
-### Step 6 — Revision Notes Agent
-
-Generates concise AI-powered revision notes using Retrieval-Augmented Generation.
-
-### Step 7 — Chat Agent
-
-Allows students to ask questions about their course while grounding every response in uploaded documents.
-
+Answers questions using semantic retrieval over uploaded documents while maintaining per-course chat history.
 ---
 
 # 🛠️ Tech Stack
@@ -127,8 +116,8 @@ Allows students to ask questions about their course while grounding every respon
 - PostgreSQL
 - Alembic
 - ChromaDB
-- Sentence Transformers
-- Gemini / OpenAI
+- Sentence Transformers (Embeddings)
+- Groq API (LLM)
 - JWT Authentication
 - Google OAuth
 
@@ -146,9 +135,9 @@ Allows students to ask questions about their course while grounding every respon
 - Vector Embeddings
 - Prompt Engineering
 - LLM-based Topic Extraction
-- LLM-based Priority Ranking
-- Background AI Pipelines
-
+- Previous Year Question Analysis
+- Asynchronous AI Processing Pipeline
+  
 ---
 
 # 📂 Project Structure
@@ -242,22 +231,21 @@ docker-compose up --build
 
 # 🎯 Why Notera?
 
-Unlike traditional PDF chatbots, Notera understands the academic workflow.
+Students often juggle lecture notes, syllabus documents, and previous year papers across multiple sources.
 
-It combines:
+Notera brings them together into a single AI-powered course workspace where students can:
 
-- document intelligence
-- semantic retrieval
-- AI reasoning
-- previous year paper analysis
-- personalized study planning
+- organize course resources
+- track syllabus completion
+- generate revision notes
+- review important previous year questions
+- ask questions grounded in their own study material
 
-to help students study more efficiently.
-
+Instead of acting as a generic PDF chatbot, Notera is designed specifically around the academic workflow.
 ---
 
 # 👩‍💻 Author
 
 **Saniya Verma**
 
-Built as an end-to-end AI Engineering project exploring Retrieval-Augmented Generation (RAG), Agentic AI pipelines, and intelligent educational systems.
+Built as an end-to-end AI Engineering project exploring Retrieval-Augmented Generation (RAG), semantic search, document intelligence, and AI-powered educational tools using FastAPI, Next.js, PostgreSQL, ChromaDB, and modern LLMs.
